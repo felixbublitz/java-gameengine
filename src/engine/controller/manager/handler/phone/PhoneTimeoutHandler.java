@@ -3,7 +3,7 @@ package engine.controller.manager.handler.phone;
 import engine.interfaces.PhoneTimeoutInterface;
 
 public class PhoneTimeoutHandler implements Runnable{
-	
+
 	private long lastConnection;
 	private static final int TIMEOUT = 15000;
 	boolean enabled = true;
@@ -13,11 +13,11 @@ public class PhoneTimeoutHandler implements Runnable{
 		this.lastConnection = System.currentTimeMillis();
 		this.phoneTimeoutInterface = phoneTimeoutInterface;
 	}
-	
+
 	public void reset(){
 		this.lastConnection = System.currentTimeMillis();
 	}
-	
+
 	@Override
 	public void run() {
 		while(enabled){

@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import engine.controller.Controller;
 import engine.controller.manager.handler.OutputHandler;
@@ -17,43 +18,59 @@ public class PhoneOutputHandler extends OutputHandler implements ControllerInter
 	String value;
     int key = -1;
     PrintWriter output;
-	
+    ArrayList<String> outputStack;
+
 	public PhoneOutputHandler(Controller controller, Socket client){
+		this.outputStack = new ArrayList<String>();
 		this.client = client;
 		controller.setControllerInterface(this);
 	}
-	
+
 
 	@Override
 	public void send(int key, String value) {
-		System.out.println(key);
 		  this.value = value;
 	      this.key = key;
 	      if(this.key != -1) {
               if(value==null){
-                  output.println(key);
+            	  if(output != null){
+            		  output.println(key);
+            	  }else{
+            		  outputStack.add(String.valueOf(key));
+            	  }
               }else {
-                  output.println(key + "#" + value);
+            	  if(output != null){
+            		  output.println(key + "#" + value);
+            	  }else{
+            		  outputStack.add(key + "#" + value);
+            	  }
               }
               value = null;
               key = -1;
-              
+
           }
 	}
-	
+
 	 public void run() {
          try {
 
              try {
-            	
+
                  OutputStream out = client.getOutputStream();
                  output = new PrintWriter(out);
                  this.output = new PrintWriter(client.getOutputStream(), true);
 
                  while (enabled) {
+
+                	 if(outputStack.size() != 0){
+                		 for(String single : outputStack){
+                			 output.println(single);
+                		 }
+                		 outputStack.clear();
+                	 }
+
                      Thread.sleep(1);
                  }
-                 client.close();
 
 
              } catch (UnknownHostException e) {
@@ -63,6 +80,13 @@ public class PhoneOutputHandler extends OutputHandler implements ControllerInter
          } catch (Exception e) {
              e.printStackTrace();
          }
-	
+
 }
+
+
+	@Override
+	public void send(int id, int key, String value) {
+		// TODO Auto-generated method stub
+
+	}
 }

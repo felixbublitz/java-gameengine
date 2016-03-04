@@ -1,5 +1,7 @@
 package engine.interfaces;
 
+import engine.timer.Timer;
+
 public interface TimerInterface {
-	void finished();
+	void finished(Timer timer);
 }

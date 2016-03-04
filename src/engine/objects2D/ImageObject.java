@@ -4,33 +4,20 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import engine.core.Game;
+import engine.datatypes.Ressource;
 
 public class ImageObject extends GameObject {
 
 	private Image image;
-	
+
 	public ImageObject(Point position, Dimension size, int rotation, Game game) {
 		super(position, size, rotation, game);
 	}
-	
-	public void setImage(Image image){
-		this.image = image;
-	}
-	
-	public void setImage(String path){
-		  try {
-		      this.image = ImageIO.read(new File(path));
-		  } catch (IOException e) {
-		  }
 
-		  
+	public void setImage(Ressource ressource){
+		this.image = ressource.getImage();
 	}
 
 	@Override
@@ -38,10 +25,18 @@ public class ImageObject extends GameObject {
 		super.startDrawing(g);
 		if(this.image != null){
 			Point imagePosition = this.getAligntPosition(g);
-				g.drawImage(image, imagePosition.x, imagePosition.y, this.size.width, this.size.height, null);
+			if(this.interpolation != null && this.interpolation.getSize() != null){
+				if(image != null){
+					g.drawImage(image, imagePosition.x, imagePosition.y, this.interpolation.getSize().width, this.interpolation.getSize().height, null);
+				}
+				}else{
+					if(image != null){
+							g.drawImage(image, imagePosition.x, imagePosition.y, this.size.width, this.size.height, null);
+					}
+			}
 		}
 		super.stopDrawing(g);
-		
+
 	}
 
 }

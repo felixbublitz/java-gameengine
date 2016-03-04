@@ -8,40 +8,60 @@ import engine.interfaces.GameLoopInterface;
 import engine.interfaces.GraphicsInterface;
 
 public class GameLoop implements Runnable, GraphicsInterface {
-	
+
 	GameLoopInterface gameLoopInterface;
 	Graphics graphics;
-	
+
 	private boolean destroyed;
 	private boolean enabled = true;
 	private boolean drawFPS = false;
-	
-	private long lastUpdateTime = 0;
-	private long lastTime = 0;
 
-	private long startTime;
-	
-	private long fps;
-	private int frame = 0;
-	
-	private static final float MAX_FRAMERATE = 60;
-	
+	private long lastUpdate = 0;
+	private long elapsedTime;
+
+	private int updateCount;
+	private int drawCount;
+	private long lastDrawLength = 0;
+
+	private long lastMeasure = 0;
+
+	private static final int MEASURE_INTERVAL = 1000;
+	private static final int MILISECONDS_PER_SECOND = 1000;
+	private static final int UPDATES_PER_SECOND = 25;
+	private static final int UPDATE_INTERVAL = MILISECONDS_PER_SECOND  / UPDATES_PER_SECOND;
+
+	private int ups = 0;
+	private int fps = 0;
+
+
+	public int getUPS(){
+		return UPDATES_PER_SECOND;
+	}
+
+	public Graphics getGraphics(){
+		return this.graphics;
+	}
+
 	public GameLoop(GameLoopInterface gameLoopInterface){
 		graphics = new Graphics(this);
 		this.gameLoopInterface = gameLoopInterface;
-		
-		this.startTime = System.currentTimeMillis();
+
 		new Thread(this).start();
 	}
-	
+	public GameLoop(GameLoopInterface gameLoopInterface, int resFactor){
+		graphics = new Graphics(this, resFactor);
+		this.gameLoopInterface = gameLoopInterface;
+		new Thread(this).start();
+	}
+
 	public void pause(){
 		enabled = false;
 	}
-	
+
 	public void resume(){
 		enabled = true;
 	}
-	
+
 	public void stop(){
 		destroyed = true;
 	}
@@ -49,59 +69,53 @@ public class GameLoop implements Runnable, GraphicsInterface {
 	@Override
 	public void run() {
 		while(!destroyed){
-			try {Thread.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
 			if(enabled){
-				if(this.updateRequired()){
+				elapsedTime = System.currentTimeMillis() - lastUpdate;
+				if(elapsedTime >= UPDATE_INTERVAL){
+					lastUpdate = System.currentTimeMillis();
 					this.gameLoopInterface.update();
-					this.graphics.requestUpdate();
+					updateCount+= 1;
 				}
+
+
+
+				if(elapsedTime <= UPDATE_INTERVAL - lastDrawLength){
+					long drawBeginTime = System.currentTimeMillis();
+					float interpolationFactor = (float)elapsedTime / (float)UPDATE_INTERVAL;
+					this.graphics.requestUpdate(interpolationFactor);
+					drawCount++;
+					lastDrawLength = System.currentTimeMillis() - drawBeginTime;
+
+					if(lastDrawLength > UPDATE_INTERVAL){
+						lastDrawLength = 0;
+					}
+				}
+
+				if(System.currentTimeMillis() - lastMeasure >= MEASURE_INTERVAL ){
+					fps = drawCount;
+					ups = updateCount;
+
+					lastMeasure = System.currentTimeMillis();
+					updateCount = 0;
+					drawCount = 0;
+				}
+
 			}
 		}
 	}
-	
-	private boolean updateRequired(){
-		if(this.getRuntime() >= 1000){
-			fps = frame;
-			frame = 0;
-		}
-		
-		long a = this.getLastUpdateTime();
-		if(a >= 1/MAX_FRAMERATE*1000){
-			this.lastUpdateTime -= 1/MAX_FRAMERATE*1000;
-			this.frame++;
-			return true;
-		}
-		return false;
-	}
-	
-	private long getLastUpdateTime(){
-		long currentTime = System.currentTimeMillis();
-		if(this.lastTime != 0){
-			this.lastUpdateTime += currentTime - this.lastTime;
-		}
-		this.lastTime = currentTime;
 
-		return this.lastUpdateTime;
-	}
-	
-	private long getRuntime(){
-		long time = System.currentTimeMillis() - this.startTime;
-		
-		if(time >= 1000){
-			this.startTime = System.currentTimeMillis();
-		}
-		return time;
-	}
+
 
 	@Override
-	public void Draw(Graphics2D g) {
-		gameLoopInterface.draw(g);
+	public void Draw(Graphics2D g, float interpolationFactor) {
+		gameLoopInterface.draw(g, interpolationFactor);
 		  if(drawFPS){
 			  g.setColor(Color.BLACK);
 			  g.setFont(new Font("Arial", Font.PLAIN, 12));
 			  g.drawString("FPS:" + this.fps, 10, 20);
-			  
-			  
+			  g.drawString("UPS:" + this.ups, 10, 44);
+
+
 		  }
 	}
 

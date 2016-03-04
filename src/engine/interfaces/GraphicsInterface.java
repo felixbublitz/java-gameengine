@@ -4,6 +4,6 @@ import java.awt.Graphics2D;
 
 public interface GraphicsInterface {
 
-	void Draw(Graphics2D g);
+	void Draw(Graphics2D g, float interpolationFactor);
 
 }

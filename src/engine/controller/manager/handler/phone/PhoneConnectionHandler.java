@@ -3,7 +3,6 @@ package engine.controller.manager.handler.phone;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
 import javax.swing.JOptionPane;
 
@@ -16,7 +15,7 @@ public class PhoneConnectionHandler extends ConnectionHandler {
 
 	private ServerSocket server;
 	private Socket client;
-	
+
 	public PhoneConnectionHandler(ConnectionHandlerInterface connectionHandlerInterface, InputHandlerInterface inputHandlerInterface) {
 		super(connectionHandlerInterface, inputHandlerInterface);
 	}
@@ -26,13 +25,13 @@ public class PhoneConnectionHandler extends ConnectionHandler {
 		this.client = null;
 		try {
 			this.client = server.accept();
-			
+
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		}
 
 
@@ -41,7 +40,7 @@ public class PhoneConnectionHandler extends ConnectionHandler {
 		PhoneInputHandler inputHandler = new PhoneInputHandler(controller, client, inputHandlerInterface);
 		return inputHandler;
 	}
-	
+
 	@Override
 	protected Runnable createOutputHandler(Controller controller) {
 		PhoneOutputHandler outputHandler = new PhoneOutputHandler(controller, client);

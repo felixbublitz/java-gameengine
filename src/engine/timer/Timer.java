@@ -2,14 +2,18 @@ package engine.timer;
 
 import engine.interfaces.TimerInterface;
 
-public class Timer {
-
+public class Timer{
 	private int elapsedTicks = 0;
 	private int destinationTicks;
 	private boolean enabled;
-	private final static int FRAMESPERSECOND = 60;
-	private TimerInterface timerInterface;
+	public TimerInterface timerInterface;
+	private TimerInterface timerInterfaceManager;
+	private int ups = 0;
 
+	public Timer(TimerInterface timerInterfaceManager, int ups) {
+		this.ups = ups;
+		this.timerInterfaceManager = timerInterfaceManager;
+	}
 	public void update(){
 		if(enabled){
 		if(elapsedTicks < destinationTicks){
@@ -18,16 +22,19 @@ public class Timer {
 			enabled = false;
 			elapsedTicks= 0;
 			destinationTicks = 0;
-			timerInterface.finished();
+			timerInterfaceManager.finished(this);
 		}
 		}
+	}
+
+	public void stop(){
+		elapsedTicks = 0;
+		enabled = false;
 	}
 
 	public void start(int seconds, TimerInterface timerInterface){
 		this.timerInterface = timerInterface;
-		this.destinationTicks = seconds * FRAMESPERSECOND;
+		this.destinationTicks = seconds * ups;
 		this.enabled = true;
 	}
-
-
 }

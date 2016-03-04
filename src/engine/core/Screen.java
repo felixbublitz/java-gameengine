@@ -18,6 +18,11 @@ public class Screen {
 		this.loaded = true;
 	}
 
+	protected void unload(){
+		game.animator.stopAll();
+		game.timer.stopAll();
+	}
+
 	protected boolean isLoaded(){
 		return this.loaded;
 	}
