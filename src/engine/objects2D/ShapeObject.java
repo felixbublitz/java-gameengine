@@ -9,8 +9,6 @@ import engine.core.Game;
 
 public class ShapeObject extends GameObject {
 
-
-
 	public ShapeObject(Point position, Dimension size, int rotation, Game game) {
 		super(position, size, rotation, game);
 		this.color = Color.white;
@@ -20,9 +18,9 @@ public class ShapeObject extends GameObject {
 	public void draw(Graphics2D g) {
 		this.startDrawing(g);
 		Point shapePosition = this.getAligntPosition(g);
-		if(this.interpolation != null && this.interpolation.getSize() != null){
+		if (this.interpolation != null && this.interpolation.getSize() != null) {
 			g.fillRect(shapePosition.x, shapePosition.y, interpolation.getSize().width, interpolation.getSize().height);
-		}else{
+		} else {
 			g.fillRect(shapePosition.x, shapePosition.y, this.size.width, this.size.height);
 		}
 

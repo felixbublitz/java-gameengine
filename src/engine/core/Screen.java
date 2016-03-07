@@ -9,33 +9,32 @@ public class Screen {
 	private boolean loaded;
 	public String title;
 
-	public void setGame(Game game){
+	public void setGame(Game game) {
 		this.game = game;
 	}
 
-
-	protected void load(){
+	protected void load() {
 		this.loaded = true;
 	}
 
-	protected void unload(){
+	protected void unload() {
 		game.animator.stopAll();
 		game.timer.stopAll();
 	}
 
-	protected boolean isLoaded(){
+	protected boolean isLoaded() {
 		return this.loaded;
 	}
 
-	protected void screenLoaded(){
+	protected void screenLoaded() {
 		this.loaded = true;
 	}
 
-	protected void draw(Graphics2D g){
+	protected void draw(Graphics2D g) {
 
 	}
 
-	protected void update(){
+	protected void update() {
 
 	}
 
@@ -47,11 +46,11 @@ public class Screen {
 
 	}
 
-	protected void controllerDisconnected(Controller controller){
+	protected void controllerDisconnected(Controller controller) {
 
 	}
 
-	protected void controllerConnected(Controller controller){
+	protected void controllerConnected(Controller controller) {
 
 	}
 

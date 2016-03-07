@@ -20,7 +20,6 @@ public class Animation {
 	public final static int SPEED_FAST = 5;
 	public final static int SPEED_VERY_FAST = 10;
 
-
 	public final static int REPEAT_FOREVER = -1;
 
 	private int type;
@@ -48,137 +47,142 @@ public class Animation {
 	private int startRotation;
 	private float startFade;
 
-	public void setAnimationInterface(AnimationInterface animationInterface){
+	public void setAnimationInterface(AnimationInterface animationInterface) {
 		this.animationInterface = animationInterface;
 	}
 
-	public GameObject getAnimatedObject(){
+	public GameObject getAnimatedObject() {
 		return this.gameObject;
 	}
 
-	public void setTargetObject(GameObject gameObject){
+	public void setTargetObject(GameObject gameObject) {
 		this.gameObject = gameObject;
 		this.storeStartValue(gameObject);
 	}
 
-	private void storeStartValue(GameObject gameObject){
+	private void storeStartValue(GameObject gameObject) {
 		this.startPosition = gameObject.getPosition();
 		this.startRotation = gameObject.getRotation();
 		this.startSize = gameObject.getSize();
 		this.startFade = gameObject.getColor().getAlpha();
 	}
 
-	public void applyInterpolation(float interpolationFactor){
+	public void applyInterpolation(float interpolationFactor) {
 
-		if(!animating){
+		if (!animating) {
 			return;
 		}
 
 		Interpolation interpolation = new Interpolation();
 
-		switch(this.type){
+		switch (this.type) {
 		case ANIMATION_SCALE:
-			if(this.scaleWidthPositive){
-				int interpolatetValue = Math.round((int)gameObject.getSize().getWidth() + this.getSpeed() * interpolationFactor);
-				if(this.value[0] >= interpolatetValue){
+			if (this.scaleWidthPositive) {
+				int interpolatetValue = Math
+						.round((int) gameObject.getSize().getWidth() + this.getSpeed() * interpolationFactor);
+				if (this.value[0] >= interpolatetValue) {
 					interpolation.addSizeWidthInterpolation(interpolatetValue);
-				}else{
-					interpolation.addSizeWidthInterpolation((int)value[0]);
+				} else {
+					interpolation.addSizeWidthInterpolation((int) value[0]);
 				}
-			}else{
-				int interpolatetValue = Math.round((int)gameObject.getSize().getWidth() - this.getSpeed() * interpolationFactor);
-				if(this.value[0] <= interpolatetValue){
+			} else {
+				int interpolatetValue = Math
+						.round((int) gameObject.getSize().getWidth() - this.getSpeed() * interpolationFactor);
+				if (this.value[0] <= interpolatetValue) {
 					interpolation.addSizeWidthInterpolation(interpolatetValue);
-				}else{
-					interpolation.addSizeWidthInterpolation((int)value[0]);
+				} else {
+					interpolation.addSizeWidthInterpolation((int) value[0]);
 				}
 			}
 
-
-			if(this.scaleHeightPositive){
-				int interpolatetValue = Math.round((int)gameObject.getSize().getHeight() + this.getSpeed() * interpolationFactor);
-				if(this.value[1] >= interpolatetValue){
+			if (this.scaleHeightPositive) {
+				int interpolatetValue = Math
+						.round((int) gameObject.getSize().getHeight() + this.getSpeed() * interpolationFactor);
+				if (this.value[1] >= interpolatetValue) {
 					interpolation.addSizeHeightInterpolation(interpolatetValue);
-				}else{
-					interpolation.addSizeHeightInterpolation((int)value[1]);
+				} else {
+					interpolation.addSizeHeightInterpolation((int) value[1]);
 				}
-			}else{
-				int interpolatetValue = Math.round((int)gameObject.getSize().getHeight() - this.getSpeed() * interpolationFactor);
-				if(this.value[1]<= interpolatetValue){
+			} else {
+				int interpolatetValue = Math
+						.round((int) gameObject.getSize().getHeight() - this.getSpeed() * interpolationFactor);
+				if (this.value[1] <= interpolatetValue) {
 					interpolation.addSizeHeightInterpolation(interpolatetValue);
-				}else{
-					interpolation.addSizeHeightInterpolation((int)value[1]);
+				} else {
+					interpolation.addSizeHeightInterpolation((int) value[1]);
 				}
 			}
 			break;
 
 		case ANIMATION_MOVE:
 
-			if(this.moveRight){
+			if (this.moveRight) {
 				int interpolatetValue = Math.round(gameObject.getPosition().x + this.getSpeed() * interpolationFactor);
-				if(this.value[0] >= interpolatetValue){
+				if (this.value[0] >= interpolatetValue) {
 					interpolation.addPositionXInterpolation(interpolatetValue);
-				}else{
-					interpolation.addPositionXInterpolation((int)value[0]);
+				} else {
+					interpolation.addPositionXInterpolation((int) value[0]);
 				}
-			}else{
+			} else {
 				int interpolatetValue = Math.round(gameObject.getPosition().x - this.getSpeed() * interpolationFactor);
-				if(this.value[0] <= interpolatetValue){
+				if (this.value[0] <= interpolatetValue) {
 					interpolation.addPositionXInterpolation(interpolatetValue);
-				}else{
-					interpolation.addPositionXInterpolation((int)value[0]);
+				} else {
+					interpolation.addPositionXInterpolation((int) value[0]);
 				}
 			}
 
-			if(this.moveDown){
+			if (this.moveDown) {
 				int interpolatetValue = Math.round(gameObject.getPosition().y + this.getSpeed() * interpolationFactor);
-				if(this.value[1] >= interpolatetValue){
+				if (this.value[1] >= interpolatetValue) {
 					interpolation.addPositionYInterpolation(interpolatetValue);
-				}else{
-					interpolation.addPositionYInterpolation((int)value[1]);
+				} else {
+					interpolation.addPositionYInterpolation((int) value[1]);
 				}
-			}else{
+			} else {
 				int interpolatetValue = Math.round(gameObject.getPosition().y - this.getSpeed() * interpolationFactor);
-				if(this.value[1] <= interpolatetValue){
+				if (this.value[1] <= interpolatetValue) {
 					interpolation.addPositionYInterpolation(interpolatetValue);
-				}else{
-					interpolation.addPositionYInterpolation((int)value[1]);
+				} else {
+					interpolation.addPositionYInterpolation((int) value[1]);
 				}
 			}
 
 			break;
 
 		case ANIMATION_ROTATE:
-			if(this.rotateClockwise){
+			if (this.rotateClockwise) {
 				int interpolatetValue = Math.round(gameObject.getRotation() + this.getSpeed() * interpolationFactor);
-				if(interpolatetValue <= value[0]){
+				if (interpolatetValue <= value[0]) {
 					interpolation.addRotateInterpolation(interpolatetValue);
-				}else{
-					interpolation.addRotateInterpolation((int)value[0]);
+				} else {
+					interpolation.addRotateInterpolation((int) value[0]);
 				}
-			}else{
+			} else {
 				int interpolatetValue = Math.round(gameObject.getRotation() - this.getSpeed() * interpolationFactor);
-				if(interpolatetValue >= value[0]){
+				if (interpolatetValue >= value[0]) {
 					interpolation.addRotateInterpolation(interpolatetValue);
-				}else{
-					interpolation.addRotateInterpolation((int)value[0]);
+				} else {
+					interpolation.addRotateInterpolation((int) value[0]);
 				}
 			}
 			break;
 		case ANIMATION_FADE:
-			if(this.fadeUp){
-				int interpolatetValue = Math.round(gameObject.getColor().getAlpha() + this.getSpeed() * interpolationFactor);
-				if(interpolatetValue <= value[0]){
+			if (this.fadeUp) {
+				int interpolatetValue = Math
+						.round(gameObject.getColor().getAlpha() + this.getSpeed() * interpolationFactor);
+				if (interpolatetValue <= value[0]) {
 					interpolation.addFadeInterpolation(interpolatetValue);
-				}else{
-					interpolation.addFadeInterpolation((int)value[0]);
+				} else {
+					interpolation.addFadeInterpolation((int) value[0]);
 				}
-			}else{
-				int interpolatetValue = Math.round(gameObject.getColor().getAlpha() - this.getSpeed() * interpolationFactor);
-				if(interpolatetValue >= value[0]){
+			} else {
+				int interpolatetValue = Math
+						.round(gameObject.getColor().getAlpha() - this.getSpeed() * interpolationFactor);
+				if (interpolatetValue >= value[0]) {
 					interpolation.addFadeInterpolation(interpolatetValue);
-				}else{
-					interpolation.addFadeInterpolation((int)value[0]);
+				} else {
+					interpolation.addFadeInterpolation((int) value[0]);
 				}
 			}
 			break;
@@ -186,11 +190,11 @@ public class Animation {
 		gameObject.setInterpolationValue(interpolation);
 	}
 
-	private void setSpeed(int speed){
+	private void setSpeed(int speed) {
 		this.speed = speed;
 	}
 
-	public void createScaleAnimation(Dimension scaleTo, int speed){
+	public void createScaleAnimation(Dimension scaleTo, int speed) {
 		this.type = ANIMATION_SCALE;
 		this.setSpeed(speed);
 
@@ -199,7 +203,7 @@ public class Animation {
 		this.value[1] = scaleTo.height;
 	}
 
-	public void createFadeAnimation(float fadeTo, int speed){
+	public void createFadeAnimation(float fadeTo, int speed) {
 		this.type = ANIMATION_FADE;
 		this.setSpeed(speed);
 
@@ -207,7 +211,7 @@ public class Animation {
 		this.value[0] = fadeTo;
 	}
 
-	public void createMoveAnimation(Point moveTo, int speed){
+	public void createMoveAnimation(Point moveTo, int speed) {
 		this.type = ANIMATION_MOVE;
 		this.setSpeed(speed);
 
@@ -216,7 +220,7 @@ public class Animation {
 		this.value[1] = moveTo.y;
 	}
 
-	public void createRotateAnimation(int rotateTo, int speed){
+	public void createRotateAnimation(int rotateTo, int speed) {
 		this.type = ANIMATION_ROTATE;
 		this.setSpeed(speed);
 
@@ -224,15 +228,13 @@ public class Animation {
 		this.value[0] = rotateTo;
 	}
 
-	public void repeat(int repeat){
+	public void repeat(int repeat) {
 		this.repeat = repeat;
 	}
 
+	public void update() {
 
-
-	public void update(){
-
-		switch(this.type){
+		switch (this.type) {
 		case ANIMATION_SCALE:
 			this.performScaleAnimation();
 			break;
@@ -250,88 +252,91 @@ public class Animation {
 		}
 	}
 
-	private void performFadeAnimation(){
-		if(!animating){
-			if(this.value[0] < this.gameObject.getColor().getAlpha()){
+	private void performFadeAnimation() {
+		if (!animating) {
+			if (this.value[0] < this.gameObject.getColor().getAlpha()) {
 				this.fadeUp = false;
-			}else{
+			} else {
 				this.fadeUp = true;
 			}
 			animating = true;
 		}
 
-		if(this.fadeUp){
-			if(this.value[0] > this.gameObject.getColor().getAlpha()){
+		if (this.fadeUp) {
+			if (this.value[0] > this.gameObject.getColor().getAlpha()) {
 				Color color = this.gameObject.getColor();
 				int newAlpha = color.getAlpha() + this.getSpeed();
-				if(newAlpha > 255){
+				if (newAlpha > 255) {
 					newAlpha = 255;
 				}
-				this.gameObject.setColor(new Color(color.getRed(),color.getGreen(),color.getBlue(),newAlpha));
-			}else{
+				this.gameObject.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), newAlpha));
+			} else {
 				this.finishAnimation();
 			}
-		}else{
-			if(this.value[0] < this.gameObject.getColor().getAlpha()){
+		} else {
+			if (this.value[0] < this.gameObject.getColor().getAlpha()) {
 				Color color = this.gameObject.getColor();
 				int newAlpha = color.getAlpha() - this.getSpeed();
-				if(newAlpha < 0){
+				if (newAlpha < 0) {
 					newAlpha = 0;
 				}
-				this.gameObject.setColor(new Color(color.getRed(),color.getGreen(),color.getBlue(),newAlpha));
-			}else{
+				this.gameObject.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), newAlpha));
+			} else {
 				this.finishAnimation();
 			}
 		}
 	}
 
-	private void performScaleAnimation(){
+	private void performScaleAnimation() {
 
-		if(!animating){
-			if(this.value[0] < this.gameObject.getSize().width){
+		if (!animating) {
+			if (this.value[0] < this.gameObject.getSize().width) {
 				this.scaleWidthPositive = false;
-			}else{
+			} else {
 				this.scaleWidthPositive = true;
 			}
 
-			if(this.value[1] < this.gameObject.getSize().height){
+			if (this.value[1] < this.gameObject.getSize().height) {
 				this.scaleHeightPositive = false;
-			}else{
+			} else {
 				this.scaleHeightPositive = true;
 			}
 			animating = true;
 		}
 
-		if(this.scaleWidthPositive){
-			if(this.value[0] > this.gameObject.getSize().width){
-				this.gameObject.setSize(new Dimension(this.gameObject.getSize().width + this.getSpeed(),this.gameObject.getSize().height));
-			}else{
+		if (this.scaleWidthPositive) {
+			if (this.value[0] > this.gameObject.getSize().width) {
+				this.gameObject.setSize(new Dimension(this.gameObject.getSize().width + this.getSpeed(),
+						this.gameObject.getSize().height));
+			} else {
 				this.horizontalFinished = true;
 			}
-		}else{
-			if(this.value[0] < this.gameObject.getSize().width){
-				this.gameObject.setSize(new Dimension(this.gameObject.getSize().width - this.getSpeed(),this.gameObject.getSize().height));
-			}else{
+		} else {
+			if (this.value[0] < this.gameObject.getSize().width) {
+				this.gameObject.setSize(new Dimension(this.gameObject.getSize().width - this.getSpeed(),
+						this.gameObject.getSize().height));
+			} else {
 				this.horizontalFinished = true;
 			}
 		}
 
-
-		if(this.scaleHeightPositive){
-			if(this.value[0] > this.gameObject.getSize().height){
-				this.gameObject.setSize(new Dimension(this.gameObject.getSize().width,this.gameObject.getSize().height + this.getSpeed()));
-			}else{
+		if (this.scaleHeightPositive) {
+			if (this.value[0] > this.gameObject.getSize().height) {
+				this.gameObject.setSize(new Dimension(this.gameObject.getSize().width,
+						this.gameObject.getSize().height + this.getSpeed()));
+			} else {
 				this.verticalFinished = true;
 			}
-		}else{
-			if(this.value[0] < this.gameObject.getSize().height){
-				this.gameObject.setSize(new Dimension(this.gameObject.getSize().width,this.gameObject.getSize().height - this.getSpeed()));
-			}else{
+		} else {
+			if (this.value[0] < this.gameObject.getSize().height) {
+				this.gameObject.setSize(new Dimension(this.gameObject.getSize().width,
+						this.gameObject.getSize().height - this.getSpeed()));
+			} else {
 				this.verticalFinished = true;
 			}
 		}
 
-		if(this.horizontalFinished && this.verticalFinished){
+		if (this.horizontalFinished && this.verticalFinished) {
 			this.verticalFinished = false;
 			this.horizontalFinished = false;
 			this.finishAnimation();
@@ -339,147 +344,142 @@ public class Animation {
 
 	}
 
-	private void finishAnimation(){
+	private void finishAnimation() {
 		this.animating = false;
-		if(this.progress < this.repeat || this.repeat == REPEAT_FOREVER){
-			this.progress +=1;
+		if (this.progress < this.repeat || this.repeat == REPEAT_FOREVER) {
+			this.progress += 1;
 			this.switchValues();
-		}else{
+		} else {
 			this.animationInterface.finished(this);
 		}
 	}
 
-	private int getSpeed(){
+	private int getSpeed() {
 		return this.speed;
 	}
 
-	private void switchValues(){
-		switch (this.type){
+	private void switchValues() {
+		switch (this.type) {
 		case ANIMATION_MOVE:
-			int currentPositionX = (int)this.value[0];
-			int currentPositionY = (int)this.value[1];
+			int currentPositionX = (int) this.value[0];
+			int currentPositionY = (int) this.value[1];
 
 			this.value[0] = this.startPosition.x;
 			this.value[1] = this.startPosition.y;
 			this.startPosition.x = currentPositionX;
 			this.startPosition.y = currentPositionY;
 
-
-
 			break;
 		case ANIMATION_SCALE:
-			int currentHeight = (int)this.value[0];
-			int currentWidth = (int)this.value[1];
+			int currentHeight = (int) this.value[0];
+			int currentWidth = (int) this.value[1];
 
 			this.value[0] = this.startSize.width;
 			this.value[1] = this.startSize.height;
 
-			this.startSize = new Dimension(currentHeight,currentWidth);
-		break;
+			this.startSize = new Dimension(currentHeight, currentWidth);
+			break;
 
 		case ANIMATION_FADE:
 			float currentFade = this.value[0];
 
 			this.value[0] = this.startFade;
 			this.startFade = currentFade;
-		break;
+			break;
 
 		case ANIMATION_ROTATE:
-			int currentRotation = (int)this.value[0];
+			int currentRotation = (int) this.value[0];
 			this.value[0] = this.startRotation;
 			this.startRotation = currentRotation;
 			break;
 		}
 	}
 
-	private void performMoveAnimation(){
+	private void performMoveAnimation() {
 
-		if(!animating){
+		if (!animating) {
 
-			if(this.value[0] < this.gameObject.getPosition().getX()){
+			if (this.value[0] < this.gameObject.getPosition().getX()) {
 				this.moveRight = false;
-			}else{
+			} else {
 				this.moveRight = true;
 			}
 
-			if(this.value[0] < this.gameObject.getPosition().getY()){
+			if (this.value[0] < this.gameObject.getPosition().getY()) {
 				this.moveDown = false;
-			}else{
+			} else {
 				this.moveDown = true;
 			}
 
 			animating = true;
 		}
 
-
-		if(this.moveRight){
-			if(this.value[0] > this.gameObject.getPosition().x){
-				this.gameObject.setPosition(new Point(this.gameObject.getPosition().x + this.getSpeed(),this.gameObject.getPosition().y));
-			}else{
+		if (this.moveRight) {
+			if (this.value[0] > this.gameObject.getPosition().x) {
+				this.gameObject.setPosition(
+						new Point(this.gameObject.getPosition().x + this.getSpeed(), this.gameObject.getPosition().y));
+			} else {
 				this.horizontalFinished = true;
 			}
-		}else{
-			if(this.value[0] < this.gameObject.getPosition().x){
-				this.gameObject.setPosition(new Point(this.gameObject.getPosition().x - this.getSpeed(),this.gameObject.getPosition().y));
-			}else{
+		} else {
+			if (this.value[0] < this.gameObject.getPosition().x) {
+				this.gameObject.setPosition(
+						new Point(this.gameObject.getPosition().x - this.getSpeed(), this.gameObject.getPosition().y));
+			} else {
 				this.horizontalFinished = true;
 			}
 		}
 
+		if (this.moveDown) {
+			if (this.value[1] > this.gameObject.getPosition().y) {
+				this.gameObject.setPosition(
+						new Point(this.gameObject.getPosition().x, this.gameObject.getPosition().y + this.getSpeed()));
 
-
-		if(this.moveDown){
-			if(this.value[1] > this.gameObject.getPosition().y){
-				this.gameObject.setPosition(new Point(this.gameObject.getPosition().x,this.gameObject.getPosition().y + this.getSpeed()));
-
-			}else{
+			} else {
 				this.verticalFinished = true;
 			}
-		}else{
-			if(this.value[1] < this.gameObject.getPosition().y){
-				this.gameObject.setPosition(new Point(this.gameObject.getPosition().x,this.gameObject.getPosition().y - this.getSpeed()));
-			}else{
+		} else {
+			if (this.value[1] < this.gameObject.getPosition().y) {
+				this.gameObject.setPosition(
+						new Point(this.gameObject.getPosition().x, this.gameObject.getPosition().y - this.getSpeed()));
+			} else {
 				this.verticalFinished = true;
 			}
 		}
 
-		if(this.horizontalFinished && this.verticalFinished){
+		if (this.horizontalFinished && this.verticalFinished) {
 			this.verticalFinished = false;
 			this.horizontalFinished = false;
 			this.finishAnimation();
 		}
 
-
 	}
 
-	private void performRotateAnimation(){
+	private void performRotateAnimation() {
 
-		if(!animating){
-			if(this.value[0] < this.gameObject.getRotation()){
+		if (!animating) {
+			if (this.value[0] < this.gameObject.getRotation()) {
 				this.rotateClockwise = false;
-			}else{
+			} else {
 				this.rotateClockwise = true;
 			}
 			animating = true;
 		}
 
-		if(this.rotateClockwise){
-			if(this.value[0] > this.gameObject.getRotation()){
+		if (this.rotateClockwise) {
+			if (this.value[0] > this.gameObject.getRotation()) {
 				this.gameObject.setRotation(this.gameObject.getRotation() + this.getSpeed());
-			}else{
+			} else {
 				this.finishAnimation();
 			}
-		}else{
-			if(this.value[0] < this.gameObject.getRotation()){
+		} else {
+			if (this.value[0] < this.gameObject.getRotation()) {
 				this.gameObject.setRotation(this.gameObject.getRotation() - this.getSpeed());
-			}else{
+			} else {
 				this.finishAnimation();
 			}
 		}
 
-
 	}
-
-
 
 }

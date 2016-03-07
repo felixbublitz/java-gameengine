@@ -12,55 +12,54 @@ public class InputHandler implements Runnable {
 	protected InputHandlerInterface inputHandlerInterface;
 	protected boolean onlyKey;
 
-	public InputHandler(Controller controller, InputHandlerInterface inputHandlerInterface){
+	public InputHandler(Controller controller, InputHandlerInterface inputHandlerInterface) {
 		this.controller = controller;
 		this.inputHandlerInterface = inputHandlerInterface;
 	}
 
 	@Override
 	public void run() {
-		while(!destroyed){
-			if(enabled){
+		while (!destroyed) {
+			if (enabled) {
 				this.detectInput();
-				}
 			}
+		}
 	}
 
-	public void pause(){
+	public void pause() {
 		this.enabled = false;
 	}
 
-	protected TCPData fetchInput(){
+	protected TCPData fetchInput() {
 		return null;
 	}
 
-	public void resume(){
+	public void resume() {
 		this.enabled = true;
 	}
 
-	public void destroy(){
+	public void destroy() {
 		this.destroyed = true;
 	}
 
-	protected void detectInput(){
+	protected void detectInput() {
 		boolean detected = false;
 
 		TCPData input = this.fetchInput();
 
-		if(input != null){
+		if (input != null) {
 			detected = true;
-			if(this.onlyKey){
+			if (this.onlyKey) {
 				this.controller.emulateKey(input.key);
-			}else{
+			} else {
 				this.controller.emulateUserInput(input.key, input.value);
 			}
 
 		}
 
-		if(detected){
+		if (detected) {
 			this.inputHandlerInterface.receivedInput(this.controller);
 		}
-
 
 	}
 

@@ -16,7 +16,7 @@ public class Controller {
 	public final static int CONTROLLER_KEYBOARD = 2;
 	public final static int CONTROLLER_SERVER = 3;
 
-	private final static int OUT_RUMBLE = 22;
+	private final static int RUMBLE = 11;
 
 	private int pressedKey;
 	private int controllerID;
@@ -25,73 +25,75 @@ public class Controller {
 	private int remoteID;
 	private ControllerInterface controllerInterface;
 
-	public Controller(int controllerID){
+	public Controller(int controllerID) {
 		this.controllerID = controllerID;
 	}
 
-	public void setRemoteID(int id){
+	public void setRemoteID(int id) {
 		this.remoteID = id;
 	}
 
-	public int getRemoteID(){
+	public int getRemoteID() {
 		return remoteID;
 	}
 
-	public void setControllerInterface(ControllerInterface controllerInterface){
+	public void setControllerInterface(ControllerInterface controllerInterface) {
 		this.controllerInterface = controllerInterface;
 	}
 
-	public int getDeviceID(){
+	public int getDeviceID() {
 		return this.controllerID;
 	}
 
-	public int getPressedKey(){
+	public int getPressedKey() {
 		int key = this.pressedKey;
-		//this.pressedKey = 0;
+		// this.pressedKey = 0;
 		return key;
 	}
 
-	public boolean isUInput(){
-		if(this.userInput == null){
+	public boolean isUInput() {
+		if (this.userInput == null) {
 			return false;
 		}
 		return true;
 	}
 
-	public void rumble(){
-		this.send(OUT_RUMBLE, null);
+	public void rumble() {
+		this.send(RUMBLE);
 	}
 
-	public void send(int key, String value){
-		if(this.controllerInterface != null){
-			if(controllerType == CONTROLLER_SERVER){
+	public void send(int key){
+		this.send(key, null);
+	}
+
+	public void send(int key, String value) {
+		if (this.controllerInterface != null) {
+			if (controllerType == CONTROLLER_SERVER) {
 				this.controllerInterface.send(this.getRemoteID(), key, value);
-			}else{
+			} else {
 				this.controllerInterface.send(key, value);
 			}
 		}
 	}
 
-	public UserInput getUserInput(){
+	public UserInput getUserInput() {
 		UserInput userInput = new UserInput();
 		userInput.type = this.pressedKey;
 		userInput.value = this.userInput;
 
-		//this.userInput = null;
-		//this.pressedKey = 0;
+		// this.userInput = null;
+		// this.pressedKey = 0;
 		return userInput;
 	}
 
-	public void emulateKey(int key){
+	public void emulateKey(int key) {
 		this.userInput = null;
 		this.pressedKey = key;
 	}
 
-	public void emulateUserInput(int key, String input){
+	public void emulateUserInput(int key, String input) {
 		this.userInput = input;
 		this.pressedKey = key;
 	}
-
-
 
 }

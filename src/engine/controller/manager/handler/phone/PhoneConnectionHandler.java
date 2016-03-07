@@ -8,16 +8,15 @@ import javax.swing.JOptionPane;
 
 import engine.controller.Controller;
 import engine.controller.manager.handler.ConnectionHandler;
-import engine.interfaces.ConnectionHandlerInterface;
-import engine.interfaces.InputHandlerInterface;
 
 public class PhoneConnectionHandler extends ConnectionHandler {
 
 	private ServerSocket server;
 	private Socket client;
 
-	public PhoneConnectionHandler(ConnectionHandlerInterface connectionHandlerInterface, InputHandlerInterface inputHandlerInterface) {
-		super(connectionHandlerInterface, inputHandlerInterface);
+	public PhoneConnectionHandler() {
+		super();
+		this.controllerType = Controller.CONTROLLER_PHONE;
 	}
 
 	@Override
@@ -32,8 +31,7 @@ public class PhoneConnectionHandler extends ConnectionHandler {
 			return false;
 		}
 
-		}
-
+	}
 
 	@Override
 	protected Runnable createInputHandler(Controller controller) {
@@ -52,7 +50,9 @@ public class PhoneConnectionHandler extends ConnectionHandler {
 		try {
 			this.server = new ServerSocket(1406);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Der Port '1406' wird bereits verwendet. \nBitte schließen Sie die Anwendung, die diesen Port verwendet.", "Fehler", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+					"Der Port '1406' wird bereits verwendet. \nBitte schließen Sie die Anwendung, die diesen Port verwendet.",
+					"Fehler", JOptionPane.ERROR_MESSAGE);
 			System.exit(1);
 		}
 	}

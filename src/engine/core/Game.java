@@ -10,12 +10,13 @@ import javax.swing.JFrame;
 import engine.animation.Animator;
 import engine.controller.Controller;
 import engine.controller.manager.ControllerManager;
+import engine.controller.manager.handler.ConnectionHandler;
 import engine.datatypes.Ressource;
 import engine.interfaces.ControllerManagerInterface;
 import engine.interfaces.GameLoopInterface;
+import engine.localisation.Localisation;
 import engine.mediaplayer.MPlayer;
 import engine.timer.TimerManager;
-
 
 public class Game implements GameLoopInterface, ControllerManagerInterface {
 
@@ -28,59 +29,60 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 	public Animator animator;
 	public TimerManager timer;
 	public MPlayer mediaPlayer;
+	public Localisation localisation;
 
-	public int getUPS(){
+	public int getUPS() {
 		return gameLoop.getUPS();
 	}
 
-	public JFrame getFrame(){
+	public JFrame getFrame() {
 		return gameLoop.getGraphics().getFrame();
 	}
 
-	public void setBackground(Ressource ressource){
-		if(gameLoop != null){
+	public void setBackground(Ressource ressource) {
+		if (gameLoop != null) {
 			gameLoop.graphics.setBackground(ressource);
 		}
 	}
 
-	public int createRandom(int min, int max){
-		 return new Random().nextInt((max - min) + 1) + min;
+	public int createRandom(int min, int max) {
+		return new Random().nextInt((max - min) + 1) + min;
 	}
 
-
-	public Game(int controllerType){
+	public Game(ConnectionHandler connectionHandler) {
 		this.gameLoop = new GameLoop(this);
 		this.animator = new Animator();
 		this.timer = new TimerManager(this);
 		this.mediaPlayer = new MPlayer();
-		this.controllerManager = new ControllerManager(controllerType, this, this.getFrame());
+		this.localisation = new Localisation();
+		this.controllerManager = new ControllerManager(connectionHandler, this);
 	}
 
-	public Game(int controllerType, int resFactor){
+	public Game(ConnectionHandler connectionHandler, int resFactor) {
 		this.gameLoop = new GameLoop(this, resFactor);
 		this.animator = new Animator();
 		this.timer = new TimerManager(this);
 		this.mediaPlayer = new MPlayer();
-		this.controllerManager = new ControllerManager(controllerType, this, this.getFrame());
+		this.controllerManager = new ControllerManager(connectionHandler, this);
 	}
 
-	public Dimension getSize(){
+	public Dimension getSize() {
 		Dimension windowSize = this.gameLoop.graphics.getDimensions();
 		return windowSize;
 	}
 
-	public Point getCenter(){
+	public Point getCenter() {
 		Dimension windowSize = this.getSize();
-		Point center = new Point(windowSize.width/2, windowSize.height/2);
+		Point center = new Point(windowSize.width / 2, windowSize.height / 2);
 		return center;
 	}
 
-	public Screen getScreen(){
+	public Screen getScreen() {
 		return this.screen;
 	}
 
-	public void showOverlayScreen(Screen screen){
-		if(screen != null){
+	public void showOverlayScreen(Screen screen) {
+		if (screen != null) {
 			screen.setGame(this);
 			gameLoop.pause();
 			this.overlayScreen = screen;
@@ -91,11 +93,11 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 		this.overlayScreen = screen;
 	}
 
-	public void hideOverlayScreen(){
+	public void hideOverlayScreen() {
 		this.overlayScreen = null;
 	}
 
-	public void setGlobalScreen(Screen screen){
+	public void setGlobalScreen(Screen screen) {
 		screen.setGame(this);
 		gameLoop.pause();
 		this.globalScreen = screen;
@@ -103,19 +105,19 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 		gameLoop.resume();
 	}
 
-	public Screen getGlobalScreen(){
+	public Screen getGlobalScreen() {
 		return this.globalScreen;
 	}
 
-	public float getResFactor(){
+	public float getResFactor() {
 		return this.gameLoop.graphics.getResFactor();
 	}
 
-	public void changeScreen(Screen screen){
-		if(screen != null){
+	public void changeScreen(Screen screen) {
+		if (screen != null) {
 			screen.setGame(this);
 			gameLoop.pause();
-			if(this.screen != null){
+			if (this.screen != null) {
 				this.screen.unload();
 			}
 			this.screen = screen;
@@ -124,78 +126,73 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 		}
 	}
 
-
-
-	public void resume(){
-		if(this.gameLoop != null){
+	public void resume() {
+		if (this.gameLoop != null) {
 			this.gameLoop.resume();
 			this.mediaPlayer.resumeAll();
 			this.timer.resumeAll();
 		}
 	}
 
-	public void pause(){
-		if(this.gameLoop != null){
+	public void pause() {
+		if (this.gameLoop != null) {
 			this.gameLoop.pause();
 			this.mediaPlayer.pauseAll();
 			this.timer.pauseAll();
 		}
 	}
 
-	public ControllerManager getControllerManager(){
+	public ControllerManager getControllerManager() {
 		return this.controllerManager;
 	}
 
-	public Controller getController(int controllerID){
+	public Controller getController(int controllerID) {
 		return this.controllerManager.getController(controllerID);
 	}
 
 	@Override
 	public void draw(Graphics2D g, float interpolationFactor) {
 
-		if(this.globalScreen != null && this.globalScreen.isLoaded()){
+		if (this.globalScreen != null && this.globalScreen.isLoaded()) {
 			this.globalScreen.draw(g);
 		}
 
-		if(this.overlayScreen != null && this.overlayScreen.isLoaded()){
+		if (this.overlayScreen != null && this.overlayScreen.isLoaded()) {
 			this.overlayScreen.draw(g);
 			return;
 		}
 
-		if(animator != null){
-		this.animator.applyInterpolation(interpolationFactor);
+		if (animator != null) {
+			this.animator.applyInterpolation(interpolationFactor);
 		}
 
-		if(this.screen != null && this.screen.isLoaded()){
+		if (this.screen != null && this.screen.isLoaded()) {
 			this.screen.draw(g);
 		}
-
-
 
 	}
 
 	@Override
 	public void update() {
 
-		if(this.globalScreen != null){
+		if (this.globalScreen != null) {
 			this.globalScreen.update();
 		}
 
-		if(this.overlayScreen != null){
+		if (this.overlayScreen != null) {
 			this.overlayScreen.update();
 			return;
 		}
 
-		if(this.screen != null){
+		if (this.screen != null) {
 			this.screen.update();
 		}
 
-
-		if(this.animator != null){
+		if (this.animator != null) {
 			animator.update();
 		}
 
-		if(this.timer != null){
+		if (this.timer != null) {
 			timer.update();
 		}
 
@@ -204,16 +201,16 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 	@Override
 	public void getPressedKey(Controller controller) {
 
-		if(this.globalScreen != null){
+		if (this.globalScreen != null) {
 			this.globalScreen.getPressedKey(controller);
 		}
 
-		if(this.overlayScreen != null){
+		if (this.overlayScreen != null) {
 			this.overlayScreen.getPressedKey(controller);
 			return;
 		}
 
-		if(this.screen != null){
+		if (this.screen != null) {
 			this.screen.getPressedKey(controller);
 		}
 
@@ -222,17 +219,16 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 	@Override
 	public void controllerConnected(Controller controller) {
 
-		if(this.screen != null){
+		if (this.screen != null) {
 			this.screen.controllerConnected(controller);
 		}
 
-		if(this.overlayScreen != null){
+		if (this.overlayScreen != null) {
 			this.overlayScreen.controllerConnected(controller);
 			return;
 		}
 
-
-		if(this.globalScreen != null){
+		if (this.globalScreen != null) {
 			this.globalScreen.controllerConnected(controller);
 		}
 
@@ -241,46 +237,37 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 	@Override
 	public void controllerDisconnected(Controller controller) {
 
-
-		if(this.globalScreen != null){
+		if (this.globalScreen != null) {
 			this.globalScreen.controllerDisconnected(controller);
-			}
+		}
 
-		if(this.overlayScreen != null){
+		if (this.overlayScreen != null) {
 			this.overlayScreen.controllerDisconnected(controller);
 			return;
 		}
 
-
-		if(this.screen != null){
-		this.screen.controllerDisconnected(controller);
+		if (this.screen != null) {
+			this.screen.controllerDisconnected(controller);
 		}
-
-
-
 
 	}
 
 	@Override
 	public void getUserInput(Controller controller) {
 
-		if(this.globalScreen != null){
+		if (this.globalScreen != null) {
 			this.globalScreen.getUserInput(controller);
 		}
 
-
-		if(this.overlayScreen != null){
+		if (this.overlayScreen != null) {
 			this.overlayScreen.getUserInput(controller);
 			return;
 		}
 
-		if(this.screen != null){
+		if (this.screen != null) {
 			this.screen.getUserInput(controller);
 		}
 
-
 	}
-
-
 
 }

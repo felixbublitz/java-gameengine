@@ -28,70 +28,68 @@ public class GameLoop implements Runnable, GraphicsInterface {
 	private static final int MEASURE_INTERVAL = 1000;
 	private static final int MILISECONDS_PER_SECOND = 1000;
 	private static final int UPDATES_PER_SECOND = 25;
-	private static final int UPDATE_INTERVAL = MILISECONDS_PER_SECOND  / UPDATES_PER_SECOND;
+	private static final int UPDATE_INTERVAL = MILISECONDS_PER_SECOND / UPDATES_PER_SECOND;
 
 	private int ups = 0;
 	private int fps = 0;
 
-
-	public int getUPS(){
+	public int getUPS() {
 		return UPDATES_PER_SECOND;
 	}
 
-	public Graphics getGraphics(){
+	public Graphics getGraphics() {
 		return this.graphics;
 	}
 
-	public GameLoop(GameLoopInterface gameLoopInterface){
+	public GameLoop(GameLoopInterface gameLoopInterface) {
 		graphics = new Graphics(this);
 		this.gameLoopInterface = gameLoopInterface;
 
 		new Thread(this).start();
 	}
-	public GameLoop(GameLoopInterface gameLoopInterface, int resFactor){
+
+	public GameLoop(GameLoopInterface gameLoopInterface, int resFactor) {
 		graphics = new Graphics(this, resFactor);
 		this.gameLoopInterface = gameLoopInterface;
 		new Thread(this).start();
 	}
 
-	public void pause(){
+	public void pause() {
 		enabled = false;
 	}
 
-	public void resume(){
+	public void resume() {
 		enabled = true;
 	}
 
-	public void stop(){
+	public void stop() {
 		destroyed = true;
 	}
 
 	@Override
 	public void run() {
-		while(!destroyed){
-			if(enabled){
+		while (!destroyed) {
+			if (enabled) {
 				elapsedTime = System.currentTimeMillis() - lastUpdate;
-				if(elapsedTime >= UPDATE_INTERVAL){
+				if (elapsedTime >= UPDATE_INTERVAL) {
 					lastUpdate = System.currentTimeMillis();
 					this.gameLoopInterface.update();
-					updateCount+= 1;
+					updateCount += 1;
 				}
 
-
-
-				if(elapsedTime <= UPDATE_INTERVAL - lastDrawLength){
+				if (elapsedTime <= UPDATE_INTERVAL - lastDrawLength) {
 					long drawBeginTime = System.currentTimeMillis();
-					float interpolationFactor = (float)elapsedTime / (float)UPDATE_INTERVAL;
+					float interpolationFactor = (float) elapsedTime / (float) UPDATE_INTERVAL;
 					this.graphics.requestUpdate(interpolationFactor);
 					drawCount++;
 					lastDrawLength = System.currentTimeMillis() - drawBeginTime;
 
-					if(lastDrawLength > UPDATE_INTERVAL){
+					if (lastDrawLength > UPDATE_INTERVAL) {
 						lastDrawLength = 0;
 					}
 				}
 
-				if(System.currentTimeMillis() - lastMeasure >= MEASURE_INTERVAL ){
+				if (System.currentTimeMillis() - lastMeasure >= MEASURE_INTERVAL) {
 					fps = drawCount;
 					ups = updateCount;
 
@@ -104,19 +102,16 @@ public class GameLoop implements Runnable, GraphicsInterface {
 		}
 	}
 
-
-
 	@Override
 	public void Draw(Graphics2D g, float interpolationFactor) {
 		gameLoopInterface.draw(g, interpolationFactor);
-		  if(drawFPS){
-			  g.setColor(Color.BLACK);
-			  g.setFont(new Font("Arial", Font.PLAIN, 12));
-			  g.drawString("FPS:" + this.fps, 10, 20);
-			  g.drawString("UPS:" + this.ups, 10, 44);
+		if (drawFPS) {
+			g.setColor(Color.BLACK);
+			g.setFont(new Font("Arial", Font.PLAIN, 12));
+			g.drawString("FPS:" + this.fps, 10, 20);
+			g.drawString("UPS:" + this.ups, 10, 44);
 
-
-		  }
+		}
 	}
 
 }

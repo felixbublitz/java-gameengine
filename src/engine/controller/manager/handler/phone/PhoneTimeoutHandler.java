@@ -2,7 +2,7 @@ package engine.controller.manager.handler.phone;
 
 import engine.interfaces.PhoneTimeoutInterface;
 
-public class PhoneTimeoutHandler implements Runnable{
+public class PhoneTimeoutHandler implements Runnable {
 
 	private long lastConnection;
 	private static final int TIMEOUT = 15000;
@@ -14,22 +14,22 @@ public class PhoneTimeoutHandler implements Runnable{
 		this.phoneTimeoutInterface = phoneTimeoutInterface;
 	}
 
-	public void reset(){
+	public void reset() {
 		this.lastConnection = System.currentTimeMillis();
 	}
 
 	@Override
 	public void run() {
-		while(enabled){
+		while (enabled) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		if(System.currentTimeMillis() - this.lastConnection > TIMEOUT){
-			enabled = false;
-			phoneTimeoutInterface.connectionClosed();
-		}
+			if (System.currentTimeMillis() - this.lastConnection > TIMEOUT) {
+				enabled = false;
+				phoneTimeoutInterface.connectionClosed();
+			}
 		}
 	}
 

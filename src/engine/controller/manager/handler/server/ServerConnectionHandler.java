@@ -8,8 +8,7 @@ import java.util.ArrayList;
 
 import engine.controller.Controller;
 import engine.controller.manager.handler.ConnectionHandler;
-import engine.interfaces.ConnectionHandlerInterface;
-import engine.interfaces.InputHandlerInterface;
+import engine.datatypes.ServerConnection;
 
 public class ServerConnectionHandler extends ConnectionHandler implements ServerInputHandlerInterface {
 
@@ -17,20 +16,22 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 	private int initServer = 0;
 	private ServerInputHandler input;
 	private ServerOutputHandler output;
-	private ArrayList<Controller>controller;
+	private ArrayList<Controller> controller;
 	private String pcCode;
+	private ServerConnection serverConnection;
 
-	public ServerConnectionHandler(ConnectionHandlerInterface connectionHandlerInterface, InputHandlerInterface inputHandlerInterface) {
-		super(connectionHandlerInterface, inputHandlerInterface);
+	public ServerConnectionHandler(ServerConnection serverConnection) {
+		super();
+		this.controllerType = Controller.CONTROLLER_SERVER;
+		this.serverConnection = serverConnection;
 		this.controller = new ArrayList<Controller>();
 	}
 
 	@Override
-	protected Runnable createInputHandler(Controller controller){
+	protected Runnable createInputHandler(Controller controller) {
 		input = new ServerInputHandler(server, this.inputHandlerInterface, this);
 		return input;
 	}
-
 
 	@Override
 	protected Runnable createOutputHandler(Controller controller) {
@@ -38,25 +39,22 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 		return output;
 	}
 
-
-
-	protected boolean getDeviceConnection(){
-		if(initServer < 1){
+	protected boolean getDeviceConnection() {
+		if (initServer < 1) {
 			try {
 				try {
-					server = new Socket("felixbublitz.de",1406);
+					server = new Socket(this.serverConnection.getIP(), this.serverConnection.getPort());
 					initServer++;
 					return true;
 				} catch (ConnectException e) {
-					//System.out.print("Server offline!");
-					//System.exit(1);
+					// System.out.print("Server offline!");
+					// System.exit(1);
 				}
-				} catch (UnknownHostException e) {
+			} catch (UnknownHostException e) {
 
-				} catch (IOException e) {
+			} catch (IOException e) {
 
-				}
-
+			}
 
 		}
 
@@ -65,16 +63,14 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 
 	@Override
 	protected void detectDevices() {
-		if(this.getDeviceConnection()){
+		if (this.getDeviceConnection()) {
 			this.openIOHandler(null);
-			}
+		}
 	}
-
-
 
 	@Override
 	public void serverOffline() {
-		for(Controller controller : this.controller){
+		for (Controller controller : this.controller) {
 			this.disconnectController(controller.getRemoteID());
 		}
 		this.inputHandlerInterface.connectionClosed(null);
@@ -83,21 +79,19 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 	@Override
 	public void getInputFromServer(int deviceID, int key, String value) {
 		Controller controller = this.getControllerByRID(deviceID);
-		if(controller == null){
+		if (controller == null) {
 			return;
 		}
-		if(value == null){
+		if (value == null) {
 			controller.emulateKey(key);
-		}else{
+		} else {
 			controller.emulateUserInput(key, value);
 		}
-
 
 		this.inputHandlerInterface.receivedInput(controller);
 	}
 
-
-	public String getPCCode(){
+	public String getPCCode() {
 		return pcCode;
 	}
 
@@ -110,9 +104,9 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 		this.connectionHandlerInterface.controllerConnectionReady(controller);
 	}
 
-	public Controller getControllerByRID(int id){
-		for(Controller controller: this.controller){
-			if(controller.getRemoteID() == id){
+	public Controller getControllerByRID(int id) {
+		for (Controller controller : this.controller) {
+			if (controller.getRemoteID() == id) {
 				return controller;
 			}
 		}
@@ -131,8 +125,22 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 
 	@Override
 	public void send(int id, int key, String value) {
-		output.send(id,key, value);
+		output.send(id, key, value);
 	}
 
+	@Override
+	public void send(int key, String value) {
+		output.send(key, value);
+	}
+
+	@Override
+	public void send(int key) {
+		output.send(key, null);
+	}
+
+	@Override
+	public void send(int id, int key) {
+		output.send(id, key, null);
+	}
 
 }

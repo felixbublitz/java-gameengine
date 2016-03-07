@@ -16,23 +16,24 @@ public class ImageObject extends GameObject {
 		super(position, size, rotation, game);
 	}
 
-	public void setImage(Ressource ressource){
+	public void setImage(Ressource ressource) {
 		this.image = ressource.getImage();
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
 		super.startDrawing(g);
-		if(this.image != null){
+		if (this.image != null) {
 			Point imagePosition = this.getAligntPosition(g);
-			if(this.interpolation != null && this.interpolation.getSize() != null){
-				if(image != null){
-					g.drawImage(image, imagePosition.x, imagePosition.y, this.interpolation.getSize().width, this.interpolation.getSize().height, null);
+			if (this.interpolation != null && this.interpolation.getSize() != null) {
+				if (image != null) {
+					g.drawImage(image, imagePosition.x, imagePosition.y, this.interpolation.getSize().width,
+							this.interpolation.getSize().height, null);
 				}
-				}else{
-					if(image != null){
-							g.drawImage(image, imagePosition.x, imagePosition.y, this.size.width, this.size.height, null);
-					}
+			} else {
+				if (image != null) {
+					g.drawImage(image, imagePosition.x, imagePosition.y, this.size.width, this.size.height, null);
+				}
 			}
 		}
 		super.stopDrawing(g);

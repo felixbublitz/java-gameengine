@@ -21,7 +21,7 @@ public class KeyboardInputHandler extends InputHandler {
 	@Override
 	public void run() {
 		load();
-		while(true){
+		while (true) {
 			try {
 				Thread.sleep(5);
 			} catch (InterruptedException e) {
@@ -30,26 +30,34 @@ public class KeyboardInputHandler extends InputHandler {
 		}
 	}
 
-	private void load(){
+	private void load() {
 		frame.addKeyListener(new KeyListener() {
-		    public void keyPressed(KeyEvent e) {
-		        if(e.getKeyCode() == KeyEvent.VK_UP){
-		        	controller.emulateKey(Controller.KEY_UP);
-		        	inputHandlerInterface.receivedInput(controller);
-		        }
-		        if(e.getKeyCode() == KeyEvent.VK_DOWN){
-		        	controller.emulateKey(Controller.KEY_DOWN);
-		        	inputHandlerInterface.receivedInput(controller);
-		        }
-		        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-		        	controller.emulateKey(Controller.KEY_CANCEL);
-		        	inputHandlerInterface.receivedInput(controller);
-		        }
-		        if(e.getKeyCode() == KeyEvent.VK_ENTER){
-		        	controller.emulateKey(Controller.KEY_OK);
-		        	inputHandlerInterface.receivedInput(controller);
-		        }
-		    }
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_UP) {
+					controller.emulateKey(Controller.KEY_UP);
+					inputHandlerInterface.receivedInput(controller);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+					controller.emulateKey(Controller.KEY_DOWN);
+					inputHandlerInterface.receivedInput(controller);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+					controller.emulateKey(Controller.KEY_LEFT);
+					inputHandlerInterface.receivedInput(controller);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					controller.emulateKey(Controller.KEY_RIGHT);
+					inputHandlerInterface.receivedInput(controller);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					controller.emulateKey(Controller.KEY_CANCEL);
+					inputHandlerInterface.receivedInput(controller);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					controller.emulateKey(Controller.KEY_OK);
+					inputHandlerInterface.receivedInput(controller);
+				}
+			}
 
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -62,7 +70,5 @@ public class KeyboardInputHandler extends InputHandler {
 			}
 		});
 	}
-
-
 
 }
