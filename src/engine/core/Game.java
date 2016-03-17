@@ -39,6 +39,25 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 		return gameLoop.getGraphics().getFrame();
 	}
 
+	public void toggleFullscreen(boolean toggleFS){
+
+		if(toggleFS){
+			com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(this.getFrame(),true);
+			com.apple.eawt.Application.getApplication().requestToggleFullScreen(this.getFrame());
+			this.getFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+
+		}else{
+			this.getFrame().setExtendedState(JFrame.NORMAL);
+		}
+
+
+	}
+
+	public Graphics getGraphics(){
+		return this.gameLoop.graphics;
+	}
+
 	public void setBackground(Ressource ressource) {
 		if (gameLoop != null) {
 			gameLoop.graphics.setBackground(ressource);

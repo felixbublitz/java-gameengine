@@ -1,5 +1,6 @@
 package engine.core;
 
+
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -26,43 +27,74 @@ public class Graphics {
 	private Image backgroundImage;
 	private Ressource backgroundRessource;
 
-	private Dimension normalDimension;
-	private Dimension originalDimension;
+	private Dimension defaultDimension;
 	private float resFactor;
 	private Dimension resultDimension;
 	private JFrame jframe;
+	private Canvas canvas;
+	private float[] resSteps = new float[]{0, 1, 1.42292f, 2};
+	private int currentResStep;
 
+	public void increaseResolution(){
+		if(this.currentResStep < resSteps.length - 1){
+			this.setResolution(++currentResStep);
+		}
+	}
+
+	public void decreaseResolution(){
+		if(this.currentResStep > 0){
+			this.setResolution(--currentResStep);
+		}
+	}
 
 	public float getResFactor() {
 		return this.resFactor;
 	}
 
-
-
-	public Graphics(GraphicsInterface graphicsInterface, int resFactor) {
-		this.graphicsInterface = graphicsInterface;
-
-		this.normalDimension = new Dimension(960, 540);
-		this.originalDimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-		this.resFactor = (float) (originalDimension.width) / ((float) this.normalDimension.width);
-		this.resFactor = resFactor;
-		this.resultDimension = new Dimension(((int) (this.normalDimension.width * this.resFactor)),
-				((int) (this.normalDimension.height * this.resFactor)));
-
-		this.createGraphicObjects();
+	public Dimension getResolution(){
+		return this.resultDimension;
 	}
 
 	public Graphics(GraphicsInterface graphicsInterface) {
 		this.graphicsInterface = graphicsInterface;
-
-		this.normalDimension = new Dimension(960, 540);
-		this.originalDimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-		this.resFactor = (float) (originalDimension.width) / ((float) this.normalDimension.width);
-		this.resultDimension = new Dimension(((int) (this.normalDimension.width * this.resFactor)),
-				((int) (this.normalDimension.height * this.resFactor)));
-
+		this.defaultDimension = new Dimension(960, 540);
+		this.resSteps[0] = this.getOptimalResFactor();
+		this.setResolution(0);
 		this.createGraphicObjects();
+	}
 
+	private Dimension getResolutionByStep(int step){
+		return  new Dimension(((int) (this.defaultDimension.width * this.resSteps[step])),
+				((int) (this.defaultDimension.height * this.resSteps[step])));
+	}
+
+	private Dimension getOptimalDimension(){
+		return this.getResolutionByStep(0);
+	}
+
+	private void setResolution(int resStep){
+		this.currentResStep = resStep;
+		this.resFactor = this.resSteps[resStep];
+		this.resultDimension = new Dimension(((int) (this.defaultDimension.width * this.resFactor)),
+				((int) (this.defaultDimension.height * this.resFactor)));
+		if(this.canvas != null){
+		this.canvas.setSize(this.resultDimension);
+		if(this.getOptimalDimension().width >= this.resultDimension.width){
+			this.canvas.setLocation(this.getOptimalDimension().width / 2 - this.canvas.getSize().width/2, this.getOptimalDimension().height / 2 - this.canvas.getSize().height/2);
+		}
+		this.jframe.setBackground(Color.BLACK);
+
+		}
+
+	}
+
+	private float getOptimalResFactor(){
+		Dimension screenDimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+		float resFactor = (float) (screenDimension.width) / ((float) this.defaultDimension.width);
+		this.resultDimension = new Dimension(((int) (this.defaultDimension.width * this.resFactor)),
+				((int) (this.defaultDimension.height * this.resFactor)));
+
+		return resFactor;
 	}
 
 	public JFrame getFrame() {
@@ -70,8 +102,7 @@ public class Graphics {
 	}
 
 	public Dimension getDimensions() {
-
-		return this.normalDimension;
+		return this.defaultDimension;
 	}
 
 	public void setBackground(Ressource ressoruce) {
@@ -79,7 +110,7 @@ public class Graphics {
 	}
 
 	private void createGraphicObjects() {
-		Canvas canvas = new Canvas();
+		canvas = new Canvas();
 		canvas.setIgnoreRepaint(true);
 		canvas.setSize(resultDimension);
 		canvas.setBackground(Color.BLACK);
@@ -92,6 +123,8 @@ public class Graphics {
 		jframe.add(canvas);
 		jframe.pack();
 		jframe.setVisible(true);
+		jframe.setFocusable(true);
+
 
 		canvas.createBufferStrategy(1);
 		this.buffer = canvas.getBufferStrategy();
@@ -103,10 +136,12 @@ public class Graphics {
 
 	}
 
+
 	public void requestUpdate(float interpolationFactor) {
 		Graphics2D g = bi.createGraphics();
 		java.awt.Graphics graphics = null;
 
+		jframe.requestFocusInWindow();
 		try {
 			g.setColor(this.background);
 			g.fillRect(0, 0, resultDimension.width, resultDimension.height);

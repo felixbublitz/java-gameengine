@@ -49,7 +49,7 @@ public class GameLoop implements Runnable, GraphicsInterface {
 	}
 
 	public GameLoop(GameLoopInterface gameLoopInterface, int resFactor) {
-		graphics = new Graphics(this, resFactor);
+		graphics = new Graphics(this);
 		this.gameLoopInterface = gameLoopInterface;
 		new Thread(this).start();
 	}
