@@ -18,6 +18,7 @@ public class ServerInputHandler extends InputHandler {
 	public final static int SYSTEM_SEND_CODE = 64;
 	public final static int SYSTEM_MOBILE_CONNECTED = 65;
 	public final static int SYSTEM_MOBILE_DISCONNECTED = 66;
+	public final static int SYSTEM_DEVICE_DISCONNECTED = 70;
 
 	public final static String TYPE_PC = "pc";
 
@@ -57,7 +58,7 @@ public class ServerInputHandler extends InputHandler {
 			serverInputHandlerInterface.connectController(input.id);
 
 			break;
-		case SYSTEM_MOBILE_DISCONNECTED:
+		case SYSTEM_DEVICE_DISCONNECTED:
 			serverInputHandlerInterface.disconnectController(input.id);
 			break;
 		}
