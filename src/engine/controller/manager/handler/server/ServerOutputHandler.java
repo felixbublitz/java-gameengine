@@ -25,6 +25,11 @@ public class ServerOutputHandler extends OutputHandler implements ControllerInte
 		this.send(ServerInputHandler.SYSTEM_CONNECTION_READY, null);
 	}
 
+	private void printToStream(String data){
+		output.println(data);
+		System.out.println("SEND: " + data);
+	}
+
 	@Override
 	public void send(int key, String value) {
 		this.send(-1, key, value);
@@ -43,7 +48,7 @@ public class ServerOutputHandler extends OutputHandler implements ControllerInte
 
 					if (outputStack.size() != 0) {
 						for (String single : outputStack) {
-							output.println(single);
+							this.printToStream(single);
 						}
 						outputStack.clear();
 					}
@@ -67,13 +72,13 @@ public class ServerOutputHandler extends OutputHandler implements ControllerInte
 		if (this.key != -1) {
 			if (value == null) {
 				if (output != null) {
-					output.println(id + "#" + key);
+					this.printToStream(id + "#" + key);
 				} else {
-					outputStack.add(String.valueOf(id + "#" + key));
+					outputStack.add(id + "#" + key);
 				}
 			} else {
 				if (output != null) {
-					output.println(id + "#" + key + "#" + value);
+					this.printToStream(id + "#" + key + "#" + value);
 				} else {
 					outputStack.add(id + "#" + key + "#" + value);
 				}

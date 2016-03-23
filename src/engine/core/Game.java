@@ -30,6 +30,7 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 	public TimerManager timer;
 	public MPlayer mediaPlayer;
 	public Localisation localisation;
+	private boolean paused;
 
 	public int getUPS() {
 		return gameLoop.getUPS();
@@ -65,6 +66,12 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 	}
 
 	public int createRandom(int min, int max) {
+		if(min < 0){
+			min = 0;
+		}
+		if(max < 0){
+			max = 0;
+		}
 		return new Random().nextInt((max - min) + 1) + min;
 	}
 
@@ -145,8 +152,13 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 		}
 	}
 
+	public boolean isPaused(){
+		return this.paused;
+	}
+
 	public void resume() {
 		if (this.gameLoop != null) {
+			paused = false;
 			this.gameLoop.resume();
 			this.mediaPlayer.resumeAll();
 			this.timer.resumeAll();
@@ -155,6 +167,7 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 
 	public void pause() {
 		if (this.gameLoop != null) {
+			paused = true;
 			this.gameLoop.pause();
 			this.mediaPlayer.pauseAll();
 			this.timer.pauseAll();

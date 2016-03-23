@@ -14,8 +14,10 @@ public class ControllerManager implements ConnectionHandlerInterface, InputHandl
 	private ConnectionHandler connectionHandler;
 	private ArrayList<Controller> controller;
 	private int controllerType;
+
+	//freeSlots size must be limit value
 	private int limit = 10;
-	private boolean[] freeSlot = { true, true, true, true };
+	private boolean[] freeSlot = { true, true, true, true, true, true, true, true, true, true };
 
 	public ConnectionHandler getConnectionHandler() {
 		return this.connectionHandler;
