@@ -42,6 +42,15 @@ public class ServerInputHandler extends InputHandler {
 
 	}
 
+	@Override
+	protected void loadHandler() {
+		try {
+			this.bufferedReader = new BufferedReader(new InputStreamReader(this.server.getInputStream()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private boolean isInternCommand(TCPData input) {
 
 		switch (input.key) {
@@ -80,30 +89,18 @@ public class ServerInputHandler extends InputHandler {
 
 	TCPData readData(Socket socket) {
 		TCPData tcpdata = new TCPData();
-		String data = null;
 
 		try {
-			if (this.bufferedReader == null) {
-				this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				this.buffer = new char[200];
+			String line = bufferedReader.readLine();
 
-			}
-
-			if (bufferedReader == null) {
-
+			if (line == null) {
 				return new TCPData(TCPData.CLOSE_CONNECTION);
 			}
 
-			int dataLength = bufferedReader.read(buffer, 0, 200);
-			if (dataLength == -1) {
-				tcpdata.key = -1;
-			} else {
+				line = line.replace("\r", "");
+				line = line.replace("\n", "");
+				tcpdata = this.decryptData(line);
 
-				data = new String(buffer, 0, dataLength);
-				data = data.replace("\r", "");
-				data = data.replace("\n", "");
-				tcpdata = this.decryptData(data);
-			}
 		} catch (IOException e) {
 
 		}

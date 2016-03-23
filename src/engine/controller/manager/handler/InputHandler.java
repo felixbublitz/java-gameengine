@@ -19,11 +19,16 @@ public class InputHandler implements Runnable {
 
 	@Override
 	public void run() {
+		this.loadHandler();
 		while (!destroyed) {
 			if (enabled) {
 				this.detectInput();
 			}
 		}
+	}
+
+	protected void loadHandler(){
+
 	}
 
 	public void pause() {
