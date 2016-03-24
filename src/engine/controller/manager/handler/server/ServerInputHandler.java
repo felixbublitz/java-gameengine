@@ -25,7 +25,6 @@ public class ServerInputHandler extends InputHandler {
 	private Socket server;
 	private TCPData data;
 	private BufferedReader bufferedReader;
-	private char[] buffer;
 	private ServerInputHandlerInterface serverInputHandlerInterface;
 
 	@Override
