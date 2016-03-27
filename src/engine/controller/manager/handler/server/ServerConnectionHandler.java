@@ -44,6 +44,7 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 			try {
 				try {
 					server = new Socket(this.serverConnection.getIP(), this.serverConnection.getPort());
+					server.setTcpNoDelay(true);
 					initServer++;
 					return true;
 				} catch (ConnectException e) {

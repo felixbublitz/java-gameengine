@@ -32,7 +32,7 @@ public class ServerOutputHandler extends OutputHandler implements ControllerInte
 
 	@Override
 	public void send(int key, String value) {
-		this.send(-1, key, value);
+		this.send(-2, key, value);
 	}
 
 	public void run() {
