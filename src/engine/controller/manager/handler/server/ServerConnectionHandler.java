@@ -19,6 +19,12 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 	private ArrayList<Controller> controller;
 	private String pcCode;
 	private ServerConnection serverConnection;
+	private boolean testCase;
+
+	public ServerConnectionHandler(ServerConnection serverConnection, boolean testCase) {
+		this(serverConnection);
+		this.testCase = testCase;
+	}
 
 	public ServerConnectionHandler(ServerConnection serverConnection) {
 		super();
@@ -29,7 +35,7 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 
 	@Override
 	protected Runnable createInputHandler(Controller controller) {
-		input = new ServerInputHandler(server, this.inputHandlerInterface, this);
+		input = new ServerInputHandler(server, this.inputHandlerInterface, this, this.testCase);
 		return input;
 	}
 
@@ -44,6 +50,7 @@ public class ServerConnectionHandler extends ConnectionHandler implements Server
 			try {
 				try {
 					server = new Socket(this.serverConnection.getIP(), this.serverConnection.getPort());
+					server.setPerformancePreferences(1, 5, 0);
 					server.setTcpNoDelay(true);
 					initServer++;
 					return true;

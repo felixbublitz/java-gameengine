@@ -23,6 +23,7 @@ public class Animation {
 	public final static int REPEAT_FOREVER = -1;
 
 	private int type;
+	private int id;
 	private int speed;
 	private float[] value;
 	private int repeat;
@@ -53,6 +54,14 @@ public class Animation {
 
 	public GameObject getAnimatedObject() {
 		return this.gameObject;
+	}
+
+	public void setIdentifier(int id){
+		this.id = id;
+	}
+
+	public int getIdentifier(){
+		return this.id;
 	}
 
 	public void setTargetObject(GameObject gameObject) {

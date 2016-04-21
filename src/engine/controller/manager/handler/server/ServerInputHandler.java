@@ -19,13 +19,14 @@ public class ServerInputHandler extends InputHandler {
 	public final static int SYSTEM_MOBILE_CONNECTED = 65;
 	public final static int SYSTEM_MOBILE_DISCONNECTED = 66;
 	public final static int SYSTEM_DEVICE_DISCONNECTED = 70;
-
 	public final static String TYPE_PC = "pc";
+	public final static String TYPE_TEST_PC = "test_pc";
 
 	private Socket server;
 	private TCPData data;
 	private BufferedReader bufferedReader;
 	private ServerInputHandlerInterface serverInputHandlerInterface;
+	private boolean testCase;
 
 	@Override
 	protected void detectInput() {
@@ -54,7 +55,11 @@ public class ServerInputHandler extends InputHandler {
 
 		switch (input.key) {
 		case SYSTEM_REQUEST_TYPE:
-			serverInputHandlerInterface.send(SYSTEM_SEND_TYPE, TYPE_PC);
+			if(testCase){
+				serverInputHandlerInterface.send(SYSTEM_SEND_TYPE, TYPE_TEST_PC);
+			}else{
+				serverInputHandlerInterface.send(SYSTEM_SEND_TYPE, TYPE_PC);
+			}
 			serverInputHandlerInterface.send(SYSTEM_REQUEST_CODE);
 			return true;
 
@@ -75,8 +80,9 @@ public class ServerInputHandler extends InputHandler {
 	}
 
 	public ServerInputHandler(Socket server, InputHandlerInterface inputHandlerInterface,
-			ServerInputHandlerInterface serverInputHandlerInterface) {
+			ServerInputHandlerInterface serverInputHandlerInterface, boolean testCase) {
 		super(null, inputHandlerInterface);
+		this.testCase = testCase;
 		this.serverInputHandlerInterface = serverInputHandlerInterface;
 		this.server = server;
 		this.inputHandlerInterface = inputHandlerInterface;

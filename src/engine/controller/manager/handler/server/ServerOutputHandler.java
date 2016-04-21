@@ -18,6 +18,7 @@ public class ServerOutputHandler extends OutputHandler implements ControllerInte
 	PrintWriter output;
 	ArrayList<String> outputStack;
 	boolean enabled = true;
+	public final static int RECEIVER_ALL = -1;
 
 	public ServerOutputHandler(Socket server) {
 		this.outputStack = new ArrayList<String>();
@@ -27,12 +28,13 @@ public class ServerOutputHandler extends OutputHandler implements ControllerInte
 
 	private void printToStream(String data){
 		output.println(data);
+		output.flush();
 		System.out.println("SEND: " + data);
 	}
 
 	@Override
 	public void send(int key, String value) {
-		this.send(-2, key, value);
+		this.send(RECEIVER_ALL, key, value);
 	}
 
 	public void run() {

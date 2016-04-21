@@ -31,9 +31,18 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 	public MPlayer mediaPlayer;
 	public Localisation localisation;
 	private boolean paused;
+	private boolean testCase;
 
 	public int getUPS() {
 		return gameLoop.getUPS();
+	}
+
+	public boolean isTestCase(){
+		return testCase;
+	}
+
+	public void setTestCase(boolean testCase){
+		this.testCase = testCase;
 	}
 
 	public JFrame getFrame() {
