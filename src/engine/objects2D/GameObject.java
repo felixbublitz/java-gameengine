@@ -25,6 +25,7 @@ public class GameObject {
 	protected Game game;
 	protected Point origin;
 	private int id;
+	private float alpha = 1;
 
 	public final static int ORIGIN_LEFT = -1;
 	public final static int ORIGIN_CENTER = 0;
@@ -35,6 +36,18 @@ public class GameObject {
 	public void setInterpolationValue(Interpolation interpolation) {
 		this.interpolation = interpolation;
 
+	}
+
+	public void setAlpha(float alpha){
+		if(alpha > 0 || alpha < 1.0){
+			this.alpha = alpha;
+		}else{
+			System.err.println("GameObject: Alpha must be between 0 and 1");
+		}
+	}
+
+	public float getAlpha(){
+		return this.alpha;
 	}
 
 	public void setID(int id) {
@@ -185,15 +198,16 @@ public class GameObject {
 
 		g.setTransform(af);
 
-		if (this.interpolation != null && this.interpolation.getAlpha() != 0) {
-			Color interPolColor = new Color(color.getRed(), color.getGreen(), color.getBlue(),
+		//if (this.interpolation != null && this.interpolation.getAlpha() != 0) {
+			/*Color interPolColor = new Color(color.getRed(), color.getGreen(), color.getBlue(),
 					this.interpolation.getAlpha());
-			g.setColor(interPolColor);
-
-		} else {
+			g.setColor(COLOR);
+			INTERPOLATION ALPHA FUNKTIONIERT NICHT
+*/
+		//} else {
 
 			g.setColor(color);
-		}
+		//}
 
 	}
 

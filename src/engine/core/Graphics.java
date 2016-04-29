@@ -109,6 +109,10 @@ public class Graphics {
 		this.backgroundRessource = ressoruce;
 	}
 
+	public void setBackgroundColor(Color color) {
+		this.background = color;
+	}
+
 	private void createGraphicObjects() {
 		canvas = new Canvas();
 		canvas.setIgnoreRepaint(true);

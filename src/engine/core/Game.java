@@ -1,5 +1,6 @@
 package engine.core;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -21,15 +22,16 @@ import engine.timer.TimerManager;
 public class Game implements GameLoopInterface, ControllerManagerInterface {
 
 	private ControllerManager controllerManager;
-	private Screen screen = null;
-	private Screen overlayScreen = null;
-	private Screen globalScreen = null;
+	private Screen screen;
+	private Screen overlayScreen;
+	private Screen globalScreen;
 
-	private GameLoop gameLoop;
 	public Animator animator;
 	public TimerManager timer;
 	public MPlayer mediaPlayer;
 	public Localisation localisation;
+
+	private GameLoop gameLoop;
 	private boolean paused;
 	private boolean testCase;
 
@@ -71,6 +73,12 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 	public void setBackground(Ressource ressource) {
 		if (gameLoop != null) {
 			gameLoop.graphics.setBackground(ressource);
+		}
+	}
+
+	public void setBackgroudColor(Color color) {
+		if (gameLoop != null) {
+			gameLoop.graphics.setBackgroundColor(color);
 		}
 	}
 
@@ -206,6 +214,10 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 			this.globalScreen.draw(g);
 		}
 
+		if (this.screen != null && this.screen.isLoaded()) {
+			this.screen.draw(g);
+		}
+
 		if (this.overlayScreen != null && this.overlayScreen.isLoaded()) {
 			this.overlayScreen.draw(g);
 			return;
@@ -215,9 +227,7 @@ public class Game implements GameLoopInterface, ControllerManagerInterface {
 			this.animator.applyInterpolation(interpolationFactor);
 		}
 
-		if (this.screen != null && this.screen.isLoaded()) {
-			this.screen.draw(g);
-		}
+
 
 	}
 

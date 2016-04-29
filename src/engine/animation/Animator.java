@@ -2,21 +2,19 @@ package engine.animation;
 
 import java.util.ArrayList;
 
-import engine.datatypes.Animation;
 import engine.interfaces.AnimationInterface;
 import engine.objects2D.GameObject;
 
 public class Animator implements AnimationInterface {
 
 	ArrayList<Animation> animation;
-	AnimationInterface animationInterface;
 
 	public Animator() {
 		this.animation = new ArrayList<Animation>();
 	}
 
 	public void animate(GameObject gameObject, Animation animation, AnimationInterface animationInterface) {
-		this.animationInterface = animationInterface;
+		animation.setTargetInterface(animationInterface);
 		this.animate(gameObject, animation);
 	}
 
@@ -49,8 +47,8 @@ public class Animator implements AnimationInterface {
 	@Override
 	public void finished(Animation animation) {
 		this.animation.remove(animation);
-		if (this.animationInterface != null) {
-			this.animationInterface.finished(animation);
+		if (animation.getTargetInterface() != null) {
+			animation.getTargetInterface().finished(animation);
 		}
 
 	}

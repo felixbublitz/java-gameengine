@@ -1,5 +1,7 @@
 package engine.objects2D;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -102,6 +104,22 @@ public class TextObject extends GameObject {
 		return new Dimension(adv, hgt);
 	}
 
+	@Override
+	public void setAlpha(float alpha) {
+		// TODO Auto-generated method stub
+		super.setAlpha(alpha);
+	}
+
+	@Override
+	public void setColor(Color color) {
+		//this.setAlpha((float)color.getAlpha()/(float)255);
+		super.setColor(color);
+	}
+
+	public void setSize(int size){
+		this.setSize(new Dimension(size,size));
+	}
+
 	private int getDescentHeight(Graphics2D g) {
 
 		FontMetrics metrics = g.getFontMetrics(tempFont);
@@ -109,13 +127,25 @@ public class TextObject extends GameObject {
 		return metrics.getDescent();
 	}
 
+	private void updateAlpha(Graphics2D g){
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.getAlpha()));
+	}
+
+	private void clearAlpha(Graphics2D g){
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+	}
+
 	@Override
 	public void draw(Graphics2D g) {
+
 		super.startDrawing(g);
+		this.updateAlpha(g);
 
 		if (this.text == null) {
 			return;
 		}
+
+
 
 		int textSize = this.size.height;
 
@@ -133,6 +163,7 @@ public class TextObject extends GameObject {
 		g.drawString(this.text, textPosition.x, textPosition.y);
 
 		super.stopDrawing(g);
+		this.clearAlpha(g);
 	}
 
 }
