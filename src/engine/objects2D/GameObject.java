@@ -67,6 +67,10 @@ public class GameObject {
 		this.applyResFactor();
 	}
 
+	public GameObject() {
+
+	}
+
 	public void setOrigin(Point origin) {
 		this.origin = origin;
 	}
@@ -124,7 +128,7 @@ public class GameObject {
 	}
 
 	protected void applyResFactor() {
-		float resFactor = this.game.getResFactor();
+		float resFactor = this.game.getGraphics().getResFactor();
 		this.postition = new Point(Math.round(this.originalPostition.x * resFactor),
 				(Math.round(this.originalPostition.y * resFactor)));
 		this.size = new Dimension(Math.round(this.originalSize.width * resFactor),
@@ -136,23 +140,23 @@ public class GameObject {
 	}
 
 	public Point getResultPosition(Point originalPosition) {
-		return new Point(Math.round(originalPosition.x * this.game.getResFactor()),
-				(Math.round(originalPosition.y * this.game.getResFactor())));
+		return new Point(Math.round(originalPosition.x * this.game.getGraphics().getResFactor()),
+				(Math.round(originalPosition.y * this.game.getGraphics().getResFactor())));
 	}
 
 	public Dimension getResultSize(Dimension originalSize) {
-		return new Dimension(Math.round(originalSize.width * this.game.getResFactor()),
-				(Math.round(originalSize.height * this.game.getResFactor())));
+		return new Dimension(Math.round(originalSize.width * this.game.getGraphics().getResFactor()),
+				(Math.round(originalSize.height * this.game.getGraphics().getResFactor())));
 	}
 
 	public Point getOriginalPosition(Point resultPosition) {
-		return new Point(Math.round(resultPosition.x / this.game.getResFactor()),
-				(Math.round(resultPosition.y / this.game.getResFactor())));
+		return new Point(Math.round(resultPosition.x / this.game.getGraphics().getResFactor()),
+				(Math.round(resultPosition.y / this.game.getGraphics().getResFactor())));
 	}
 
 	public Dimension getOriginalSize(Dimension resultSize) {
-		return new Dimension(Math.round(resultSize.width / this.game.getResFactor()),
-				(Math.round(resultSize.height / this.game.getResFactor())));
+		return new Dimension(Math.round(resultSize.width / this.game.getGraphics().getResFactor()),
+				(Math.round(resultSize.height / this.game.getGraphics().getResFactor())));
 	}
 
 	public void setPosition(Point position) {
@@ -188,6 +192,7 @@ public class GameObject {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		af = new AffineTransform();
 
+		if(this.postition != null && this.size != null){
 		if (this.interpolation != null && this.interpolation.getRotation() != 0) {
 			af.rotate(Math.toRadians(this.interpolation.getRotation()), this.postition.x + this.size.width / 2,
 					this.postition.y + this.size.height / 2);
@@ -197,6 +202,7 @@ public class GameObject {
 		}
 
 		g.setTransform(af);
+		}
 
 		//if (this.interpolation != null && this.interpolation.getAlpha() != 0) {
 			/*Color interPolColor = new Color(color.getRed(), color.getGreen(), color.getBlue(),

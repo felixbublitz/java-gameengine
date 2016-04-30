@@ -9,6 +9,7 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
@@ -101,7 +102,7 @@ public class Graphics {
 		return jframe;
 	}
 
-	public Dimension getDimensions() {
+	public Dimension getScreenSize() {
 		return this.defaultDimension;
 	}
 
@@ -111,6 +112,25 @@ public class Graphics {
 
 	public void setBackgroundColor(Color color) {
 		this.background = color;
+	}
+
+
+	public void setFullscreen(boolean fullscreen){
+		if(fullscreen){
+		      com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(this.getFrame(),true);
+		      com.apple.eawt.Application.getApplication().requestToggleFullScreen(this.getFrame());
+		      this.getFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+
+		    }else{
+		      this.getFrame().setExtendedState(JFrame.NORMAL);
+		    }
+	}
+
+	public Point getCenter(){
+		Dimension windowSize = this.getScreenSize();
+	    Point center = new Point(windowSize.width / 2, windowSize.height / 2);
+	    return center;
 	}
 
 	private void createGraphicObjects() {
@@ -141,7 +161,7 @@ public class Graphics {
 	}
 
 
-	public void requestUpdate(float interpolationFactor) {
+	void requestUpdate(float interpolationFactor) {
 		Graphics2D g = bi.createGraphics();
 		java.awt.Graphics graphics = null;
 

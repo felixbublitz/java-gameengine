@@ -45,7 +45,7 @@ public class Controller {
 		return this.controllerID;
 	}
 
-	public int getPressedKey() {
+	public int onKeyPressed() {
 		int key = this.pressedKey;
 		// this.pressedKey = 0;
 		return key;
@@ -76,7 +76,7 @@ public class Controller {
 		}
 	}
 
-	public UserInput getUserInput() {
+	public UserInput onInputReceived() {
 		UserInput userInput = new UserInput();
 		userInput.type = this.pressedKey;
 		userInput.value = this.userInput;

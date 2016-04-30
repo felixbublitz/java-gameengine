@@ -9,7 +9,6 @@ import engine.interfaces.GraphicsInterface;
 
 public class GameLoop implements Runnable, GraphicsInterface {
 
-	GameLoopInterface gameLoopInterface;
 	Graphics graphics;
 
 	private boolean destroyed;
@@ -22,6 +21,8 @@ public class GameLoop implements Runnable, GraphicsInterface {
 	private int updateCount;
 	private int drawCount;
 	private long lastDrawLength = 0;
+
+	private Game game;
 
 	private long lastMeasure = 0;
 
@@ -41,16 +42,16 @@ public class GameLoop implements Runnable, GraphicsInterface {
 		return this.graphics;
 	}
 
-	public GameLoop(GameLoopInterface gameLoopInterface) {
+	public GameLoop(Game game) {
 		graphics = new Graphics(this);
-		this.gameLoopInterface = gameLoopInterface;
+		this.game = game;
 
 		new Thread(this).start();
 	}
 
-	public GameLoop(GameLoopInterface gameLoopInterface, int resFactor) {
+	public GameLoop(Game game, int resFactor) {
 		graphics = new Graphics(this);
-		this.gameLoopInterface = gameLoopInterface;
+		this.game = game;
 		new Thread(this).start();
 	}
 
@@ -73,7 +74,7 @@ public class GameLoop implements Runnable, GraphicsInterface {
 				elapsedTime = System.currentTimeMillis() - lastUpdate;
 				if (elapsedTime >= UPDATE_INTERVAL) {
 					lastUpdate = System.currentTimeMillis();
-					this.gameLoopInterface.update();
+					this.game.update();
 					updateCount += 1;
 				}
 
@@ -104,7 +105,7 @@ public class GameLoop implements Runnable, GraphicsInterface {
 
 	@Override
 	public void Draw(Graphics2D g, float interpolationFactor) {
-		gameLoopInterface.draw(g, interpolationFactor);
+		this.game.draw(g, interpolationFactor);
 		if (drawFPS) {
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("Arial", Font.PLAIN, 12));

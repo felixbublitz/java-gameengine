@@ -27,6 +27,10 @@ public class ShapeObject extends GameObject {
 		this.color = Color.white;
 	}
 
+	public ShapeObject() {
+		this.color = Color.white;
+	}
+
 	public void setBorder(Color color, boolean dashed){
 		this.borderColor = color;
 		this.dashedStroke = dashed;

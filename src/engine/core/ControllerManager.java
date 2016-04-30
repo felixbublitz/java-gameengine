@@ -1,4 +1,4 @@
-package engine.controller.manager;
+package engine.core;
 
 import java.util.ArrayList;
 
@@ -10,10 +10,10 @@ import engine.interfaces.InputHandlerInterface;
 
 public class ControllerManager implements ConnectionHandlerInterface, InputHandlerInterface {
 
-	private ControllerManagerInterface controllerManagerInteface;
 	private ConnectionHandler connectionHandler;
 	private ArrayList<Controller> controller;
 	private int controllerType;
+	Game game;
 
 	//freeSlots size must be limit value
 	private int limit = 10;
@@ -35,11 +35,11 @@ public class ControllerManager implements ConnectionHandlerInterface, InputHandl
 	}
 
 	public ControllerManager(ConnectionHandler connectionHandler,
-			ControllerManagerInterface controllerManagerInteface) {
+			Game game) {
 
 		this.controllerType = connectionHandler.getControllerType();
 		this.controller = new ArrayList<Controller>();
-		this.controllerManagerInteface = controllerManagerInteface;
+		this.game = game;
 
 		connectionHandler.setConnectionHandlerInterface(this);
 		connectionHandler.setInputHandlerInterface(this);
@@ -51,9 +51,9 @@ public class ControllerManager implements ConnectionHandlerInterface, InputHandl
 	@Override
 	public void receivedInput(Controller controller) {
 		if (controller.isUInput()) {
-			this.controllerManagerInteface.getUserInput(controller);
+			game.inputReceived(controller);
 		} else {
-			this.controllerManagerInteface.getPressedKey(controller);
+			game.keyPressed(controller);
 		}
 
 	}
@@ -87,18 +87,18 @@ public class ControllerManager implements ConnectionHandlerInterface, InputHandl
 	@Override
 	public void connectionClosed(Controller controller) {
 		if (controller == null) {
-			this.controllerManagerInteface.controllerDisconnected(controller);
+			game.controllerDisconnected(controller);
 			return;
 		}
 
 		this.controller.remove(controller);
 		this.releaseSlot(controller.getDeviceID());
-		this.controllerManagerInteface.controllerDisconnected(controller);
+		game.controllerDisconnected(controller);
 	}
 
 	@Override
 	public void controllerConnectionReady(Controller controller) {
-		this.controllerManagerInteface.controllerConnected(controller);
+		game.controllerConnected(controller);
 
 	}
 
